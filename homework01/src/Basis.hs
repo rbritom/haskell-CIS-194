@@ -21,7 +21,9 @@ module Basis where
 -- []
 
 toDigits :: Integer -> [Integer]
-toDigits = undefined
+toDigits a
+        | a > 0     = toDigits (div a 10) ++ [mod a 10]
+        | otherwise = []
 
 ----------------------------------------------------------------------
 -- Exercise 2
@@ -35,7 +37,10 @@ toDigits = undefined
 -- [1,4,3]
 
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+doubleEveryOther list = reverse (doubleEven (reverse list))
+  where doubleEven []         = []
+        doubleEven [x]        = list
+        doubleEven (x:(y:zs)) = x : (y * 2) : doubleEven zs
 
 ----------------------------------------------------------------------
 -- Exercise 3
@@ -47,7 +52,9 @@ doubleEveryOther = undefined
 -- 22
 
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
+sumDigits list = sum (splitDigits list)
+ where splitDigits [] = []
+       splitDigits (x:xs) = toDigits x ++ splitDigits xs
 
 ----------------------------------------------------------------------
 -- Exercise 4
@@ -61,7 +68,7 @@ sumDigits = undefined
 -- False
 
 validate :: Integer -> Bool
-validate = undefined
+validate a = mod (sumDigits (doubleEveryOther (toDigits a))) 10 == 0
 
 ----------------------------------------------------------------------
 -- Exercise 5
@@ -73,10 +80,12 @@ type Move = (Peg, Peg)
 -- |
 --
 -- >>> hanoi 2 "a" "b" "c"
--- [("a","c"), ("a","b"), ("c","b")]
+-- [("a","c"), ("a","b"),("c","b")]
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined
+hanoi 0 _ _ _ = []
+hanoi 1 o t _ = [(o, t)]
+hanoi n o t s = hanoi (n - 1) o s t ++ hanoi 1 o t s ++ hanoi (n - 1) s t o
 
 ----------------------------------------------------------------------
 -- Exercise 6 (Optional)
